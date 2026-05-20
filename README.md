@@ -97,3 +97,34 @@ Verify that both the Rust toolchain and Inno Setup 6 are provisioned on the host
 build-windows.bat
 ```
 The resulting distribution binary will be accessible at dist\windows\IAMBusiness-Setup.exe.
+
+To execute the software in release mode natively without running the installation deployment scripts:
+
+```bash
+cargo run --release
+```
+
+---
+
+## Operational Logic
+
+### Contractual Serial Notation
+All generated rental agreements are parsed through an automated sequence tracking system conforming to standard institutional notation: `IAM-YYYY-NNNN` (e.g., `IAM-2026-0001`).
+
+### Production Dependencies
+
+| Crate | Target Version | Operational Purpose |
+|:---|:---|:---|
+| `eframe` | 0.29.1 | Immediate-mode desktop graphic user interface framework |
+| `csv` | 1.3 | High-throughput structural text parsing engine |
+| `serde` | 1.0 | Data serialization and deserialization layers |
+| `chrono` | 0.4 | Temporal logic processing and date arithmetic operations |
+
+### Binary Size Optimization
+By leveraging explicit release profiles (`opt-level = "z"`), compiler optimization passes achieve a compact, statically linked target binary size ranging between approximately **5 MB and 8 MB**, making it highly viable for low-spec physical infrastructure.
+
+---
+
+## License
+
+Copyright IAM Business. All rights reserved. Proprietary software. Unauthorized duplication or redistribution is strictly prohibited.
