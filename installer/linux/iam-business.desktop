@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=IAM Business
+GenericName=Car Rental Manager
+Comment=Complete car rental management application
+Exec=/usr/local/bin/iam-business
+Icon=iam-business
+Terminal=false
+StartupNotify=true
+Categories=Office;Finance;
+Keywords=rental;car;fleet;business;
