@@ -70,3 +70,30 @@ Ensure the native Rust toolchain is accessible within your host shell environmen
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf [https://sh.rustup.rs](https://sh.rustup.rs) | sh
 ```
+
+## Linux Platforms
+Execute system dependency provisions based on your target system package manager before compilation:
+```bash
+# Package requirements for Fedora environments
+sudo dnf install gcc libxcb-devel libX11-devel
+
+# Package requirements for Ubuntu/Debian environments
+sudo apt install build-essential libxcb1-dev libxcb-render0-dev \
+                 libxcb-shape0-dev libxcb-xfixes0-dev
+
+# Local compilation and immediate binary execution
+cargo build --release
+./target/release/iam-business
+
+# Execution of distribution packaging sequence
+chmod +x build-linux.sh
+./build-linux.sh
+sudo dpkg -i dist/linux/iam-business_1.0.0_amd64.deb
+```
+
+## Windows Platforms
+Verify that both the Rust toolchain and Inno Setup 6 are provisioned on the host environment paths, then execute the automated build batch file:
+```bash
+build-windows.bat
+```
+The resulting distribution binary will be accessible at dist\windows\IAMBusiness-Setup.exe.
