@@ -27,3 +27,26 @@ pub fn page_tableau(ui: &mut egui::Ui, app: &mut App) {
             });
         });
     });
+
+ui.add_space(20.0);
+    ui.label(RichText::new("Alertes Mouvements du Lendemain (Départs / Retours)").size(16.0).strong().color(text()));
+    ui.add_space(8.0);
+
+    let retours = app.retours_demain();
+    let departs = app.departs_demain();
+
+    if retours.is_empty() && departs.is_empty() {
+        ui.label(RichText::new("Aucun mouvement prévu pour demain.").italic().color(muted()));
+    } else {
+        if !retours.is_empty() {
+            ui.label(RichText::new("📥 Retours Attendus Demain :").color(AMBER).strong());
+            for c in &retours {
+                ui.horizontal(|ui| {
+                    ui.label(format!("• Contrat {} - {} (Client: {})", c.numero, c.voiture_modele, c.client_nom));
+                    if ui.small_button("Détails").clicked() {
+                        app.modal_contrat.contrat_id = c.id;
+                        app.modal_contrat.visible = true;
+                    }
+                });
+            }
+        }
