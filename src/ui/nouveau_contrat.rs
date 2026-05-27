@@ -10,7 +10,14 @@ pub fn page_nouveau_contrat(ui: &mut egui::Ui, app: &mut App) {
         app.f_numero = app.numero_suggere();
     }
 
-    titre_page(ui, if app.f_en_edition.is_some() { "Modifier le Contrat" } else { "Créer un Nouveau Contrat de Location" });
+    titre_page(
+        ui,
+        if app.f_en_edition.is_some() {
+            "Modifier le Contrat"
+        } else {
+            "Créer un Nouveau Contrat de Location"
+        },
+    );
 
     panneau().show(ui, |ui| {
         egui::ScrollArea::vertical().max_height(550.0).show(ui, |ui| {
@@ -82,7 +89,7 @@ pub fn page_nouveau_contrat(ui: &mut egui::Ui, app: &mut App) {
                 ui.end_row();
             });
 
-ui.add_space(15.0);
+            ui.add_space(15.0);
             if bouton_principal(ui, if app.f_en_edition.is_some() { "Mettre à jour le contrat" } else { "Enregistrer le contrat" }) {
                 app.f_msg.clear();
                 app.f_ok = false;
@@ -151,3 +158,15 @@ ui.add_space(15.0);
                     app.contrats.push(c);
                     app.f_msg = "Nouveau contrat enregistré avec succès !".into();
                 }
+                app.f_ok = true;
+                sauvegarder(&rentals_file(), &app.contrats);
+                app.vider_formulaire();
+            }
+
+            if !app.f_msg.is_empty() {
+                ui.add_space(8.0);
+                ui.label(RichText::new(&app.f_msg).color(if app.f_ok { GREEN } else { RED_IAM }).strong());
+            }
+        });
+    });
+}
