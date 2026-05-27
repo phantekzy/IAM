@@ -205,3 +205,52 @@ impl App {
         }
         a
     }
+
+pub fn prochain_id_contrat(&self) -> u64 {
+        self.contrats.iter().map(|c| c.id).max().unwrap_or(0) + 1
+    }
+    pub fn prochain_id_voiture(&self) -> u64 {
+        self.voitures.iter().map(|v| v.id).max().unwrap_or(0) + 1
+    }
+    pub fn numero_suggere(&self) -> String {
+        format!("IAM-{}-{:04}", Local::now().year(), self.prochain_id_contrat())
+    }
+    pub fn est_disponible(&self, vid: u64, du: NaiveDate, au: NaiveDate, exclude_contrat_id: Option<u64>) -> bool {
+        !self.contrats.iter().any(|c| {
+            if let Some(excl) = exclude_contrat_id {
+                if c.id == excl { return false; }
+            }
+            c.voiture_id == vid && c.chevauche(du, au)
+        })
+    }
+    pub fn loues_auj(&self) -> usize {
+        let t = Local::now().date_naive();
+        self.contrats.iter().filter(|c| c.statut == "Actif" && c.chevauche(t, t)).count()
+    }
+    pub fn retours_demain(&self) -> Vec<Contrat> {
+        let demain = Local::now().date_naive() + Duration::days(1);
+        self.contrats.iter().filter(|c| c.statut == "Actif").filter(|c| parse_date(&c.date_fin) == Some(demain)).cloned().collect()
+    }
+    pub fn departs_demain(&self) -> Vec<Contrat> {
+        let demain = Local::now().date_naive() + Duration::days(1);
+        self.contrats.iter().filter(|c| c.statut == "Actif").filter(|c| parse_date(&c.date_debut) == Some(demain)).cloned().collect()
+    }
+    pub fn ca_mois(&self) -> f64 {
+        let n = Local::now().date_naive();
+        self.contrats.iter().filter(|c| c.statut != "Annulé").filter(|c| {
+            parse_date(&c.date_debut).map(|d| d.year() == n.year() && d.month() == n.month()).unwrap_or(false)
+        }).map(|c| c.total()).sum()
+    }
+    pub fn ca_total(&self) -> f64 {
+        self.contrats.iter().filter(|c| c.statut != "Annulé").map(|c| c.total()).sum()
+    }
+    pub fn naviguer(&mut self, dest: Onglet) {
+        if self.onglet != dest {
+            self.onglet_prec = Some(self.onglet);
+            self.onglet = dest;
+        }
+    }
+    pub fn nav_menu(&mut self, dest: Onglet) {
+        self.onglet = dest;
+        self.onglet_prec = None;
+    }
