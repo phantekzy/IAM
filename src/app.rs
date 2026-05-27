@@ -308,3 +308,22 @@ pub fn statut_voiture(&self, vid: u64, du: NaiveDate, au: NaiveDate) -> StatutVo
         let last = contrats.iter().filter_map(|c| parse_date(&c.date_fin).map(|d| (d, c.clone()))).filter(|(d, _)| *d < du).max_by_key(|(d, _)| *d).map(|(_, c)| c);
         let maintenance = voiture.etat == "En maintenance";
         let unpaid_non_future = contrats.iter().filter(|c| c.reste_a_payer() > 0.0).filter(|c| parse_date(&c.date_debut).map(|d| d <= au).unwrap_or(false)).max_by_key(|c| parse_date(&c.date_fin).unwrap_or_else(|| Local::now().date_naive())).cloned();
+
+let (couleur, libelle) = if current.is_some() { (RED_IAM, "En période") } else if future.is_some() { (Color32::from_rgb(99, 102, 241), "Réservé") } else if unpaid_non_future.is_some() { (AMBER, "Impayé") } else if maintenance { (AMBER, "En maintenance") } else if last.is_some() { (muted(), "Terminé") } else { (GREEN, "Disponible") };
+
+        let mut badges = Vec::new();
+        if let Some(c) = &current { badges.push((format!("Actuel: {}", c.numero), RED_IAM)); }
+        if let Some(c) = &future { badges.push((format!("Futur: {}", c.numero), Color32::from_rgb(99, 102, 241))); }
+        if let Some(c) = &unpaid_non_future { badges.push((format!("Reste: {:.0} DA", c.reste_a_payer()), AMBER)); }
+        if maintenance { badges.push(("Maintenance".into(), AMBER)); }
+        if let Some(c) = &last { badges.push((format!("Terminé: {}", c.numero), muted())); }
+
+        let mut lignes = Vec::new();
+        if let Some(c) = &current { lignes.push((Self::contrat_resume(c, "Période"), RED_IAM)); }
+        if let Some(c) = &future { lignes.push((Self::contrat_resume(c, "Futur"), Color32::from_rgb(99, 102, 241))); }
+        if let Some(c) = &unpaid_non_future { if !lignes.iter().any(|(t, _)| t.contains(&c.numero)) { lignes.push((Self::contrat_resume(c, "Solde"), AMBER)); } }
+        if let Some(c) = &last { if current.is_none() && future.is_none() { lignes.push((Self::contrat_resume(c, "Terminé"), muted())); } }
+        if lignes.is_empty() { lignes.push((format!("{} est disponible", voiture.modele), GREEN)); }
+
+        StatutVoiture { couleur, libelle: libelle.into(), badges, lignes }
+    }
