@@ -42,3 +42,27 @@ pub fn panneau() -> egui::Frame {
         ..Default::default()
     }
 }
+
+pub fn titre_page(ui: &mut egui::Ui, t: &str) {
+    ui.label(RichText::new(t).size(24.0).color(RED_IAM).strong());
+    ui.add_space(6.0);
+    ui.separator();
+    ui.add_space(12.0);
+}
+
+pub fn etiquette(ui: &mut egui::Ui, txt: &str) {
+    ui.add_sized(
+        [LABEL_W, 28.0],
+        egui::Label::new(RichText::new(txt).size(13.5).color(text())),
+    );
+}
+
+pub fn bouton_principal(ui: &mut egui::Ui, txt: &str) -> bool {
+    ui.add_sized(
+        [INPUT_W, 36.0],
+        egui::Button::new(RichText::new(txt).size(14.0).color(WHITE))
+            .fill(RED_IAM)
+            .rounding(6.0),
+    )
+    .clicked()
+}
