@@ -113,3 +113,28 @@ ui.add_space(15.0);
             ui.add_space(4.0);
         }
     });
+
+if let Some(target_id) = app.vt_marquer_vendu {
+        egui::Window::new("Confirmer le prix final de vente").collapsible(false).resizable(false).show(ui.ctx(), |ui| {
+            ui.horizontal(|ui| {
+                ui.label("Prix réel conclu (DA) :");
+                ui.text_edit_singleline(&mut app.vt_prix_vendu_input);
+            });
+            ui.add_space(8.0);
+            ui.horizontal(|ui| {
+                if ui.button("Valider la vente").clicked() {
+                    let prx: f64 = app.vt_prix_vendu_input.trim().parse().unwrap_or(0.0);
+                    if let Some(car) = app.ventes.iter_mut().find(|x| x.id == target_id) {
+                        car.vendu = true;
+                        car.prix_vendu = prx;
+                        car.date_vente = aujourd_hui();
+                    }
+                    sauvegarder(&ventes_file(), &app.ventes);
+                    app.vt_marquer_vendu = None;
+                }
+                if ui.button("Annuler").clicked() {
+                    app.vt_marquer_vendu = None;
+                }
+            });
+        });
+    }
