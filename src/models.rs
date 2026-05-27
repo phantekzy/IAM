@@ -74,3 +74,49 @@ pub struct Contrat {
     pub montant_paye: f64,
     pub modifiable_note: String,
 }
+
+impl Contrat {
+    pub fn jours(&self) -> i64 {
+        let d = chrono::NaiveDate::parse_from_str(&self.date_debut, "%Y-%m-%d").ok();
+        let f = chrono::NaiveDate::parse_from_str(&self.date_fin, "%Y-%m-%d").ok();
+        d.zip(f)
+            .map(|(a, b)| (b - a).num_days().max(1))
+            .unwrap_or(1)
+    }
+
+    pub fn total(&self) -> f64 {
+        self.jours() as f64 * self.tarif_jour
+    }
+
+    pub fn reste_a_payer(&self) -> f64 {
+        let t = self.total();
+        if self.montant_paye >= t {
+            0.0
+        } else {
+            t - self.montant_paye
+        }
+    }
+
+    #[allow(dead_code)]
+    pub fn km_parcourus(&self) -> f64 {
+        if self.km_retour > self.km_depart {
+            self.km_retour - self.km_depart
+        } else {
+            0.0
+        }
+    }
+
+    pub fn chevauche(&self, du: chrono::NaiveDate, au: chrono::NaiveDate) -> bool {
+        if self.statut == "Annulé" {
+            return false;
+        }
+        if self.statut == "Terminé" {
+            let f = chrono::NaiveDate::parse_from_str(&self.date_fin, "%Y-%m-%d").ok();
+            let d = chrono::NaiveDate::parse_from_str(&self.date_debut, "%Y-%m-%d").ok();
+            return d.zip(f).map(|(a, b)| a <= au && b > du).unwrap_or(false);
+        }
+        let d = chrono::NaiveDate::parse_from_str(&self.date_debut, "%Y-%m-%d").ok();
+        let f = chrono::NaiveDate::parse_from_str(&self.date_fin, "%Y-%m-%d").ok();
+        d.zip(f).map(|(a, b)| a <= au && b >= du).unwrap_or(false)
+    }
+}
