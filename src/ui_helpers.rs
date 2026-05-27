@@ -96,3 +96,23 @@ pub fn bouton_vert(ui: &mut egui::Ui, txt: &str, w: f32) -> bool {
     )
     .clicked()
 }
+
+pub fn bouton_modification(ui: &mut egui::Ui, txt: &str, w: f32) -> bool {
+    ui.add_sized(
+        [w, 30.0],
+        egui::Button::new(RichText::new(txt).size(13.0).color(WHITE))
+            .fill(Color32::from_rgb(100, 120, 200))
+            .rounding(5.0),
+    )
+    .clicked()
+}
+
+pub fn bouton_bleu(ui: &mut egui::Ui, txt: &str, w: f32) -> bool {
+    ui.add_sized(
+        [w, 28.0],
+        egui::Button::new(RichText::new(txt).size(12.5).color(WHITE))
+            .fill(Color32::from_rgb(59, 130, 246))
+            .rounding(5.0),
+    )
+    .clicked()
+}
