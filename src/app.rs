@@ -254,3 +254,23 @@ pub fn prochain_id_contrat(&self) -> u64 {
         self.onglet = dest;
         self.onglet_prec = None;
     }
+
+ipub fn vider_formulaire(&mut self) {
+        self.f_numero.clear();
+        self.f_voiture = 0;
+        self.f_voiture_note.clear();
+        self.f_voiture_search.clear();
+        self.f_client.clear();
+        self.f_tel.clear();
+        self.f_debut = aujourd_hui();
+        self.f_fin = dans_7j();
+        self.f_km_dep = "0".into();
+        self.f_km_ret = "0".into();
+        self.f_tarif.clear();
+        self.f_notes.clear();
+        self.f_montant_paye = "0".into();
+        self.f_msg.clear();
+        self.f_ok = false;
+        self.f_en_edition = None;
+        self.f_car_error_cleared = false;
+    }
