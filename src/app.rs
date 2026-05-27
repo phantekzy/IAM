@@ -297,3 +297,14 @@ pub fn contrat_par_id(&self, id: u64) -> Option<&Contrat> {
     pub fn contrat_resume(c: &Contrat, prefix: &str) -> String {
         format!("{} {} | {} au {} | {} | reste {:.0} DA", prefix, c.numero, afficher_date(&c.date_debut), afficher_date(&c.date_fin), c.client_nom, c.reste_a_payer())
     }
+
+pub fn statut_voiture(&self, vid: u64, du: NaiveDate, au: NaiveDate) -> StatutVoiture {
+        let Some(voiture) = self.voiture_par_id(vid) else {
+            return StatutVoiture { couleur: muted(), libelle: "Inconnue".into(), badges: vec![], lignes: vec![] };
+        };
+        let contrats = self.contrats_voiture(vid);
+        let current = contrats.iter().find(|c| c.chevauche(du, au)).cloned();
+        let future = contrats.iter().filter_map(|c| parse_date(&c.date_debut).map(|d| (d, c.clone()))).filter(|(d, _)| *d > au).min_by_key(|(d, _)| *d).map(|(_, c)| c);
+        let last = contrats.iter().filter_map(|c| parse_date(&c.date_fin).map(|d| (d, c.clone()))).filter(|(d, _)| *d < du).max_by_key(|(d, _)| *d).map(|(_, c)| c);
+        let maintenance = voiture.etat == "En maintenance";
+        let unpaid_non_future = contrats.iter().filter(|c| c.reste_a_payer() > 0.0).filter(|c| parse_date(&c.date_debut).map(|d| d <= au).unwrap_or(false)).max_by_key(|c| parse_date(&c.date_fin).unwrap_or_else(|| Local::now().date_naive())).cloned();
