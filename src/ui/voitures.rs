@@ -61,3 +61,62 @@ ui.add_space(10.0);
             app.v_msg = "Véhicule inséré avec succès !".into();
             app.v_ok = true;
         }
+
+if !app.v_msg.is_empty() {
+            ui.label(RichText::new(&app.v_msg).color(if app.v_ok { GREEN } else { RED_IAM }));
+        }
+    });
+
+    ui.add_space(15.0);
+    ui.label(RichText::new("🚗 Liste des Véhicules").size(16.0).strong());
+    ui.add_space(5.0);
+
+    let start = app.v_page * ITEMS_PER_PAGE;
+    let pool = &app.voitures[start.min(app.voitures.len()).. (start + ITEMS_PER_PAGE).min(app.voitures.len())];
+
+    egui::ScrollArea::vertical().max_height(400.0).show(ui, |ui| {
+        for v in pool {
+            let active_c = app.contrat_actif_pour_voiture(v.id);
+            panneau().show(ui, |ui| {
+                ui.horizontal(|ui| {
+                    ui.vertical(|ui| {
+                        ui.label(RichText::new(&v.modele).bold());
+                        ui.label(format!("Plaque: {} | Catégorie: {} | Couleur: {}", v.plaque, v.categorie, v.couleur));
+                        ui.label(RichText::new(format!("Tarif: {:.0} DA/Jour", v.tarif_jour)).color(GREEN));
+                        
+                        if let Some(c) = active_c {
+                            ui.label(RichText::new(format!("Status: Loué (Contrat: {} - Client: {})", c.numero, c.client_nom)).color(RED_IAM));
+                        } else {
+                            let et_cl = if v.etat == "En maintenance" { AMBER } else { GREEN };
+                            ui.label(RichText::new(format!("État: {}", v.etat)).color(et_cl));
+                        }
+                    });
+
+                    ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                        let vid = v.id;
+                        if bouton_danger(ui, "Retirer", 70.0) {
+                            app.v_suppr_confirm = Some(vid);
+                        }
+                        if v.etat == "Bon état" {
+                            if bouton_neutre(ui, "Maintenance", 100.0) {
+                                if let Some(found) = app.voitures.iter_mut().find(|x| x.id == vid) {
+                                    found.etat = "En maintenance".into();
+                                    sauvegarder(&cars_file(), &app.voitures);
+                                }
+                            }
+                        } else if bouton_vert(ui, "Rétablir", 100.0) {
+                            if let Some(found) = app.voitures.iter_mut().find(|x| x.id == vid) {
+                                found.etat = "Bon état".into();
+                                sauvegarder(&cars_file(), &app.voitures);
+                            }
+                        }
+                        if bouton_neutre(ui, "Fiche", 60.0) {
+                            app.modal_voiture.voiture_id = v.id;
+                            app.modal_voiture.visible = true;
+                        }
+                    });
+                });
+            });
+            ui.add_space(4.0);
+        }
+    });
