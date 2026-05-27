@@ -66,3 +66,13 @@ pub fn bouton_principal(ui: &mut egui::Ui, txt: &str) -> bool {
     )
     .clicked()
 }
+
+pub fn bouton_danger(ui: &mut egui::Ui, txt: &str, w: f32) -> bool {
+    ui.add_sized(
+        [w, 30.0],
+        egui::Button::new(RichText::new(txt).size(13.0).color(WHITE))
+            .fill(Color32::from_rgb(180, 30, 40))
+            .rounding(5.0),
+    )
+    .clicked()
+}
