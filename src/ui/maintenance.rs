@@ -70,3 +70,38 @@ ui.add_space(10.0);
             ui.label(RichText::new(&app.rep_msg).color(if app.rep_ok { GREEN } else { RED_IAM }));
         }
     });
+
+ui.add_space(15.0);
+    ui.label(RichText::new("📋 Historique des Interventions Mécaniques").size(16.0).strong());
+    ui.add_space(5.0);
+
+    egui::ScrollArea::vertical().max_height(350.0).show(ui, |ui| {
+        let mut suppr_req = None;
+        for rep_item in &app.reparations {
+            let rid = rep_item.id;
+            panneau().show(ui, |ui| {
+                ui.horizontal(|ui| {
+                    ui.vertical(|ui| {
+                        ui.label(RichText::new(format!("🔧 Voiture: {} ({})", rep_item.voiture_modele, rep_item.voiture_plaque)).bold());
+                        ui.label(format!("Date: {} | Intervention: {}", rep_item.date, rep_item.description));
+                        if !rep_item.prix.is_empty() {
+                            ui.label(RichText::new(format!("Coût: {} DA", rep_item.prix)).color(AMBER));
+                        }
+                        if !rep_item.observation.is_empty() {
+                            ui.label(format!("Observation: {}", rep_item.observation));
+                        }
+                    });
+
+                    ui.with_layout(egui::Layout::right_to_left(egui::Align::Min), |ui| {
+                        if bouton_danger(ui, "Supprimer", 90.0) {
+                            suppr_req = Some(rid);
+                        }
+                    });
+                });
+            });
+            ui.add_space(5.0);
+        }
+        if let Some(id) = suppr_req {
+            app.rep_suppr_confirm = Some(id);
+        }
+    });
