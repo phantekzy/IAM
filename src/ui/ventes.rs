@@ -68,3 +68,48 @@ ui.add_space(10.0);
             ui.label(RichText::new(&app.vt_msg).color(if app.vt_ok { GREEN } else { RED_IAM }));
         }
     });
+
+ui.add_space(15.0);
+    ui.label(RichText::new("💰 Catalogue Occasion").size(16.0).strong());
+    ui.add_space(5.0);
+
+    let start = app.vt_page * ITEMS_PER_PAGE;
+    let v_pool = &app.ventes[start.min(app.ventes.len()).. (start + ITEMS_PER_PAGE).min(app.ventes.len())];
+
+    egui::ScrollArea::vertical().max_height(350.0).show(ui, |ui| {
+        for vt in v_pool {
+            panneau().show(ui, |ui| {
+                ui.horizontal(|ui| {
+                    ui.vertical(|ui| {
+                        ui.horizontal(|ui| {
+                            ui.label(RichText::new(&vt.nom).bold());
+                            if vt.vendu {
+                                ui.label(RichText::new("[VENDU]").color(GREEN).small());
+                            } else {
+                                ui.label(RichText::new("[EN VENTE]").color(Color32::from_rgb(59, 130, 246)).small());
+                            }
+                        });
+                        ui.label(format!("Châssis: {} | Immat: {}", vt.num_chassis, vt.plaque));
+                        ui.label(format!("Prix d'achat: {:.0} DA | Demandé: {:.0} DA", vt.prix_achat, vt.prix_demande));
+                        if vt.vendu {
+                            ui.label(RichText::new(format!("Vendu à : {:.0} DA (Bénéfice: {:.0} DA) le {}", vt.prix_vendu, vt.benefice(), vt.date_vente)).color(GREEN));
+                        }
+                    });
+
+                    ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                        let vtid = vt.id;
+                        if bouton_danger(ui, "Supprimer", 75.0) {
+                            app.vt_suppr_confirm = Some(vtid);
+                        }
+                        if !vt.vendu {
+                            if bouton_vert(ui, "Marquer Vendu", 110.0) {
+                                app.vt_marquer_vendu = Some(vtid);
+                                app.vt_prix_vendu_input = format!("{:.0}", vt.prix_demande);
+                            }
+                        }
+                    });
+                });
+            });
+            ui.add_space(4.0);
+        }
+    });
