@@ -76,3 +76,23 @@ pub fn bouton_danger(ui: &mut egui::Ui, txt: &str, w: f32) -> bool {
     )
     .clicked()
 }
+
+pub fn bouton_neutre(ui: &mut egui::Ui, txt: &str, w: f32) -> bool {
+    ui.add_sized(
+        [w, 30.0],
+        egui::Button::new(RichText::new(txt).size(13.0).color(muted()))
+            .fill(card2())
+            .rounding(5.0),
+    )
+    .clicked()
+}
+
+pub fn bouton_vert(ui: &mut egui::Ui, txt: &str, w: f32) -> bool {
+    ui.add_sized(
+        [w, 30.0],
+        egui::Button::new(RichText::new(txt).size(13.0).color(WHITE))
+            .fill(Color32::from_rgb(22, 130, 80))
+            .rounding(5.0),
+    )
+    .clicked()
+}
