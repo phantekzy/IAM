@@ -1,3 +1,4 @@
+mod app;
 mod models;
 mod storage;
 mod theme;
