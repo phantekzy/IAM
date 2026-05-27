@@ -16,3 +16,38 @@ thread_local! {
     static T_TEXT:   Cell<[u8;3]> = Cell::new([240, 240, 245]);
     static T_MUTED:  Cell<[u8;3]> = Cell::new([130, 130, 145]);
 }
+
+fn c3(tl: &'static std::thread::LocalKey<Cell<[u8; 3]>>) -> Color32 {
+    tl.with(|c| {
+        let [r, g, b] = c.get();
+        Color32::from_rgb(r, g, b)
+    })
+}
+
+#[allow(dead_code)]
+pub fn bg() -> Color32 {
+    c3(&T_BG)
+}
+pub fn card() -> Color32 {
+    c3(&T_CARD)
+}
+pub fn card2() -> Color32 {
+    c3(&T_CARD2)
+}
+pub fn border() -> Color32 {
+    c3(&T_BORDER)
+}
+pub fn text() -> Color32 {
+    c3(&T_TEXT)
+}
+pub fn muted() -> Color32 {
+    c3(&T_MUTED)
+}
+
+pub fn tinted_card(tint: Color32, alpha: u8) -> Color32 {
+    let [br, bg, bb, _] = card().to_array();
+    let [tr, tg, tb, _] = tint.to_array();
+    let a = alpha as u16;
+    let blend = |base: u8, t: u8| -> u8 { ((base as u16 * (255 - a) + t as u16 * a) / 255) as u8 };
+    Color32::from_rgb(blend(br, tr), blend(bg, tg), blend(bb, tb))
+}
