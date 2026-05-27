@@ -274,3 +274,26 @@ ipub fn vider_formulaire(&mut self) {
         self.f_en_edition = None;
         self.f_car_error_cleared = false;
     }
+
+pub fn contrat_par_id(&self, id: u64) -> Option<&Contrat> {
+        self.contrats.iter().find(|c| c.id == id)
+    }
+    pub fn voiture_par_id(&self, id: u64) -> Option<&Voiture> {
+        self.voitures.iter().find(|v| v.id == id)
+    }
+    pub fn contrat_actif_pour_voiture(&self, vid: u64) -> Option<&Contrat> {
+        let auj = Local::now().date_naive();
+        self.contrats.iter().find(|c| c.voiture_id == vid && c.statut == "Actif" && c.chevauche(auj, auj))
+    }
+    pub fn contrats_voiture(&self, vid: u64) -> Vec<Contrat> {
+        let mut contrats: Vec<Contrat> = self.contrats.iter().filter(|c| c.voiture_id == vid && c.statut != "Annulé").cloned().collect();
+        contrats.sort_by(|a, b| {
+            let da = parse_date(&a.date_debut).unwrap_or_else(|| Local::now().date_naive());
+            let db = parse_date(&b.date_debut).unwrap_or_else(|| Local::now().date_naive());
+            db.cmp(&da)
+        });
+        contrats
+    }
+    pub fn contrat_resume(c: &Contrat, prefix: &str) -> String {
+        format!("{} {} | {} au {} | {} | reste {:.0} DA", prefix, c.numero, afficher_date(&c.date_debut), afficher_date(&c.date_fin), c.client_nom, c.reste_a_payer())
+    }
