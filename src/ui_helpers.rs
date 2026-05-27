@@ -116,3 +116,19 @@ pub fn bouton_bleu(ui: &mut egui::Ui, txt: &str, w: f32) -> bool {
     )
     .clicked()
 }
+
+pub fn pagination_controls(ui: &mut egui::Ui, page: &mut usize, total_items: usize) {
+    let max_p = (total_items.saturating_sub(1)) / ITEMS_PER_PAGE;
+    if max_p > 0 {
+        ui.horizontal(|ui| {
+            ui.add_space(6.0);
+            if ui.button("◀ Précédent").clicked() && *page > 0 {
+                *page -= 1;
+            }
+            ui.label(format!("Page {} / {}", *page + 1, max_p + 1));
+            if ui.button("Suivant ▶").clicked() && *page < max_p {
+                *page += 1;
+            }
+        });
+    }
+}
