@@ -30,3 +30,56 @@ impl App {
         }
     }
 }
+
+pub fn page_disponibilite(ui: &mut egui::Ui, app: &mut App) {
+    titre_page(ui, "Recherche de Disponibilité globale");
+
+    panneau().show(ui, |ui| {
+        egui::Grid::new("dispo_gr").num_columns(2).spacing([10.0, 10.0]).show(ui, |ui| {
+            etiquette(ui, "Date début (JJ/MM/AAAA) :");
+            ui.text_edit_singleline(&mut app.d_du);
+            ui.end_row();
+
+            etiquette(ui, "Date fin (JJ/MM/AAAA) :");
+            ui.text_edit_singleline(&mut app.d_au);
+            ui.end_row();
+        });
+
+        ui.add_space(10.0);
+        if ui.button(RichText::new("Vérifier Véhicules Disponibles").strong()).clicked() {
+            app.d_erreur.clear();
+            app.d_fait = false;
+            match (parse_date(&app.d_du), parse_date(&app.d_au)) {
+                (Some(du), Some(au)) if du <= au => {
+                    app.d_ids = app.voitures.iter().filter(|v| app.est_disponible(v.id, du, au, None)).map(|v| v.id).collect();
+                    app.d_fait = true;
+                }
+                (Some(du), Some(au)) => app.d_erreur = format!("Erreur: la date de début ({}) est après la fin ({}).", du.format("%d/%m/%Y"), au.format("%d/%m/%Y")),
+                _ => app.d_erreur = "Format de date incorrect. Utilisez JJ/MM/AAAA ou AAAA-MM-DD.".into()
+            }
+        }
+    });
+
+if !app.d_erreur.is_empty() {
+        ui.add_space(10.0);
+        ui.label(RichText::new(&app.d_erreur).color(RED_IAM));
+    }
+
+    if app.d_fait {
+        ui.add_space(15.0);
+        ui.label(RichText::new(format!("🏁 {} véhicules totalement libres sur cette période :", app.d_ids.len())).size(15.0).strong().color(GREEN));
+        ui.add_space(5.0);
+        egui::ScrollArea::vertical().max_height(200.0).show(ui, |ui| {
+            for vid in &app.d_ids {
+                if let Some(v) = app.voiture_par_id(*vid) {
+                    ui.horizontal(|ui| {
+                        ui.label(format!("• {} ({}) - Catégorie: {} | Tarif: {:.0} DA/j", v.modele, v.plaque, v.categorie, v.tarif_jour));
+                        if ui.small_button("Historique & Fiche").clicked() {
+                            app.modal_voiture.voiture_id = v.id;
+                            app.modal_voiture.visible = true;
+                        }
+                    });
+                }
+            }
+        });
+    }
