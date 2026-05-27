@@ -120,3 +120,35 @@ impl Contrat {
         d.zip(f).map(|(a, b)| a <= au && b >= du).unwrap_or(false)
     }
 }
+
+#[derive(PartialEq, Clone, Copy, Debug)]
+pub enum Onglet {
+    Tableau,
+    Disponibilite,
+    NouveauContrat,
+    Contrats,
+    Voitures,
+    Ventes,
+    Maintenance,
+}
+
+#[derive(Default, Debug, Clone)]
+pub struct ModalVoiture {
+    pub visible: bool,
+    pub voiture_id: u64,
+    pub histo_recherche: String,
+}
+
+#[derive(Default, Debug, Clone)]
+pub struct ModalContrat {
+    pub visible: bool,
+    pub contrat_id: u64,
+}
+
+#[derive(Clone, Debug)]
+pub struct StatutVoiture {
+    pub couleur: Color32,
+    pub libelle: String,
+    pub badges: Vec<(String, Color32)>,
+    pub lignes: Vec<(String, Color32)>,
+}
