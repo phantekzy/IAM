@@ -37,3 +37,36 @@ pub fn page_maintenance(ui: &mut egui::Ui, app: &mut App) {
             ui.text_edit_multiline(&mut app.rep_observation);
             ui.end_row();
         });
+
+ui.add_space(10.0);
+        if ui.button("Enregistrer l'opération mécanique").clicked() {
+            app.rep_msg.clear();
+            if app.rep_description.trim().is_empty() {
+                app.rep_msg = "Erreur: La description est obligatoire.".into();
+                return;
+            }
+            let Some(v_chosen) = app.voitures.get(app.rep_voiture_idx) else {
+                app.rep_msg = "Erreur: Véhicule incorrect.".into();
+                return;
+            };
+            let next_rep_id = app.reparations.iter().map(|x| x.id).max().unwrap_or(0) + 1;
+            let rep = Reparation {
+                id: next_rep_id,
+                voiture_id: v_chosen.id,
+                voiture_modele: v_chosen.modele.clone(),
+                voiture_plaque: v_chosen.plaque.clone(),
+                date: app.rep_date.trim().to_string(),
+                description: app.rep_description.trim().to_string(),
+                prix: app.rep_prix.trim().to_string(),
+                observation: app.rep_observation.trim().to_string()
+            };
+            app.reparations.push(rep);
+            sauvegarder(&reparations_file(), &app.reparations);
+            app.rep_description.clear(); app.rep_prix.clear(); app.rep_observation.clear();
+            app.rep_msg = "Opération technique mémorisée avec succès.".into();
+            app.rep_ok = true;
+        }
+        if !app.rep_msg.is_empty() {
+            ui.label(RichText::new(&app.rep_msg).color(if app.rep_ok { GREEN } else { RED_IAM }));
+        }
+    });
