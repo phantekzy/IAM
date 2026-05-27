@@ -12,3 +12,23 @@ pub fn parse_date(s: &str) -> Option<NaiveDate> {
         .or_else(|_| NaiveDate::parse_from_str(s, "%Y-%m-%d"))
         .ok()
 }
+
+pub fn afficher_date(iso: &str) -> String {
+    NaiveDate::parse_from_str(iso, "%Y-%m-%d")
+        .map(|d| d.format("%d/%m/%Y").to_string())
+        .unwrap_or_else(|_| iso.to_string())
+}
+
+pub fn stocker_date(d: NaiveDate) -> String {
+    d.format("%Y-%m-%d").to_string()
+}
+
+pub fn aujourd_hui() -> String {
+    Local::now().date_naive().format("%d/%m/%Y").to_string()
+}
+
+pub fn dans_7j() -> String {
+    (Local::now().date_naive() + Duration::days(7))
+        .format("%d/%m/%Y")
+        .to_string()
+}
