@@ -32,3 +32,13 @@ pub fn dans_7j() -> String {
         .format("%d/%m/%Y")
         .to_string()
 }
+
+pub fn panneau() -> egui::Frame {
+    egui::Frame {
+        fill: card(),
+        inner_margin: Margin::same(18.0),
+        rounding: Rounding::same(10.0),
+        stroke: Stroke::new(1.0, border()),
+        ..Default::default()
+    }
+}
