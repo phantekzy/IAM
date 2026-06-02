@@ -1,13 +1,14 @@
 use eframe::egui::Color32;
 use std::cell::Cell;
 
-pub const RED_IAM: Color32 = Color32::from_rgb(200, 30, 40);
-pub const GREEN: Color32 = Color32::from_rgb(34, 197, 94);
-pub const AMBER: Color32 = Color32::from_rgb(245, 158, 11);
+const RED_IAM: Color32 = Color32::from_rgb(200, 30, 40);
+const GREEN: Color32 = Color32::from_rgb(34, 197, 94);
+const AMBER: Color32 = Color32::from_rgb(245, 158, 11);
 #[allow(dead_code)]
-pub const BLUE: Color32 = Color32::from_rgb(59, 130, 246);
-pub const WHITE: Color32 = Color32::WHITE;
+const BLUE: Color32 = Color32::from_rgb(59, 130, 246);
+const WHITE: Color32 = Color32::WHITE;
 
+use std::cell::Cell;
 thread_local! {
     static T_BG:     Cell<[u8;3]> = Cell::new([12,  12,  15]);
     static T_CARD:   Cell<[u8;3]> = Cell::new([25,  25,  32]);
@@ -23,28 +24,27 @@ fn c3(tl: &'static std::thread::LocalKey<Cell<[u8; 3]>>) -> Color32 {
         Color32::from_rgb(r, g, b)
     })
 }
-
 #[allow(dead_code)]
-pub fn bg() -> Color32 {
+fn bg() -> Color32 {
     c3(&T_BG)
 }
-pub fn card() -> Color32 {
+fn card() -> Color32 {
     c3(&T_CARD)
 }
-pub fn card2() -> Color32 {
+fn card2() -> Color32 {
     c3(&T_CARD2)
 }
-pub fn border() -> Color32 {
+fn border() -> Color32 {
     c3(&T_BORDER)
 }
-pub fn text() -> Color32 {
+fn text() -> Color32 {
     c3(&T_TEXT)
 }
-pub fn muted() -> Color32 {
+fn muted() -> Color32 {
     c3(&T_MUTED)
 }
 
-pub fn tinted_card(tint: Color32, alpha: u8) -> Color32 {
+fn tinted_card(tint: Color32, alpha: u8) -> Color32 {
     let [br, bg, bb, _] = card().to_array();
     let [tr, tg, tb, _] = tint.to_array();
     let a = alpha as u16;
@@ -52,7 +52,7 @@ pub fn tinted_card(tint: Color32, alpha: u8) -> Color32 {
     Color32::from_rgb(blend(br, tr), blend(bg, tg), blend(bb, tb))
 }
 
-pub fn set_theme(dark: bool) {
+fn set_theme(dark: bool) {
     if dark {
         T_BG.with(|c| c.set([12, 12, 15]));
         T_CARD.with(|c| c.set([25, 25, 32]));
@@ -69,3 +69,7 @@ pub fn set_theme(dark: bool) {
         T_MUTED.with(|c| c.set([90, 90, 110]));
     }
 }
+
+const INPUT_W: f32 = 300.0;
+const LABEL_W: f32 = 170.0;
+const ITEMS_PER_PAGE: usize = 10;
