@@ -1,9 +1,0 @@
-pub mod contrats;
-pub mod disponibilite;
-pub mod maintenance;
-pub mod modals;
-pub mod nouveau_contrat;
-pub mod sidebar;
-pub mod tableau;
-pub mod ventes;
-pub mod voitures;
