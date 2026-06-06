@@ -50,7 +50,11 @@ IAM Business is a desktop application developed in Rust using the eframe/egui fr
    git clone [https://github.com/yourusername/iam-business.git](https://github.com/yourusername/iam-business.git)
     ``
 2. Navigate to the project directory:
-```bash
-cd iam-business
-```
+    ```bash
+    cd iam-business
+    ``
+3. Run the application:
+    ```bash
+        cargo run 
+    ``
 
