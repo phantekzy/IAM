@@ -64,5 +64,4 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 ## Special Thanks
 
-This project would have been much harder to finish without the moral support of my cat, @Ferchouch. A huge thank you to him for not peeing on the laptop while I was coding.
-
+This project would have been much harder to finish without the moral support of my cat, Ferchouch (https://github.com/Ferchouch). A huge thank you to him for not peeing on the laptop while I was coding.
