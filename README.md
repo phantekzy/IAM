@@ -58,3 +58,11 @@ IAM Business is a desktop application developed in Rust using the eframe/egui fr
         cargo run 
     ```
 
+## License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+## Special Thanks
+
+This project would have been much harder to finish without the moral support of my cat, @Ferchouch. A huge thank you to him for not peeing on the laptop while I was coding.
+
