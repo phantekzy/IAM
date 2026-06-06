@@ -32,3 +32,9 @@ Desktop.ini
 *.sqlite-journal
 
 .env
+
+# Installer files
+*.exe
+*.msi
+*.deb
+*.rpm
