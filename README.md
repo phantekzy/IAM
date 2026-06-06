@@ -1,130 +1,43 @@
-# IAM Business - Car Rental Manager
+# IAM BUSINESS APP
 
-A complete desktop car rental management application made using Rust and the egui framework. 
-This platform eliminates external database dependencies and cloud overhead by utilizing localized flat-file CSV storage located directly within the host system user directories.
+![Dashboard](pics/1.png)
+![Contract Management](pics/2.png)
+![Fleet Management](pics/3.png)
+![Financial Report](pics/4.png)
 
----
-
-## System Features
-
-### Dashboard Module
-* **Operational Analytics:** Provides macro statistics cards detailing active fleet counts, current vehicle availability, and total accumulated revenue.
-* **Status Monitors:** Implements visual status indicators for rapid fleet monitoring alongside a ledger displaying recent contractual activity.
-
-### Availability Module
-* **Temporal Query Engine:** Allows operators to select specific date ranges to instantaneously view unreserved fleet vehicles.
-* **Streamlined Workflow:** Initiates a pre-filled contract pipeline directly from an available vehicle file card with a single click.
-
-### Rental Initialization Module
-* **Comprehensive Entry Ledger:** Captures mandatory operational vectors including vehicle identification, client credentials, contact records, staff agent tracking, temporal boundaries, and odometer metrics (initial/expected return).
-* **Live Calculation Pipeline:** Computes dynamic live price calculations and runs algorithmic overlapping-date validation checks prior to contract submission.
-
-### Contract Ledger Module
-* **Tabular Visualization:** Implements a spreadsheet-style scrollable table displaying comprehensive structural data including duration metrics, distance tracking, and financial breakdowns.
-* **Advanced Querying:** Provides real-time string searches and logical status filters to isolate specific records rapidly.
-* **Execution Gates:** Features discrete confirmation buttons for immediate contract validation or termination.
-
-### Fleet Management Module
-* **Real-Time Tracking:** Monitors daily asset statuses (Rented/Free) across the entire fleet registry.
-* **Inventory Control:** Integrated administrative interfaces to dynamically add new assets or delete retired units from production tracking.
+IAM Business is a desktop application developed in Rust using the eframe/egui framework. It is designed to assist with the management of car rental operations. The application provides tools for handling contracts, vehicle inventory, financial reporting, maintenance logs, and vehicle sales tracking.
 
 ---
 
-## Data Persistence & Storage
+## Features
 
-To minimize deployment overhead and infrastructure costs, application data is persisted within native filesystem shares as plain CSV files. This enables immediate interoperability with spreadsheet applications like Microsoft Excel or LibreOffice.
-
-| Data Type | Windows Environment | Linux / macOS Environment |
-|:---|:---|:---|
-| Fleet Records (`cars.csv`) | `%APPDATA%\IAMBusiness\cars.csv` | `~/.local/share/IAMBusiness/cars.csv` |
-| Transaction Ledger (`rentals.csv`) | `%APPDATA%\IAMBusiness\rentals.csv` | `~/.local/share/IAMBusiness/rentals.csv` |
-
----
-
-## Project Architecture
-
-```text
-iam-business/
-├── Cargo.toml                  # Dependency declarations and optimization profiles
-├── src/
-│   └── main.rs                 # Comprehensive application codebase (~700 lines)
-├── installer/
-│   ├── windows/
-│   │   └── setup.iss           # Inno Setup deployment script for Windows compilation
-│   └── linux/
-│       ├── iam-business.desktop# Desktop system integration file
-│       └── create-deb.sh       # Native Debian packaging compilation script
-├── build-windows.bat           # Automated single-command Windows build execution script
-├── build-linux.sh              # Automated single-command Linux build execution script
-└── dist/                       # Output directory for production distribution artifacts
-    ├── windows/
-    │   └── IAMBusiness-Setup.exe
-    └── linux/
-        └── iam-business_1.0.0_amd64.deb
-```
-
-##Compilation & Deployment
-
-### Compilation Prerequisites
-Ensure the native Rust toolchain is accessible within your host shell environment:
-```bash
-curl --proto '=https' --tlsv1.2 -sSf [https://sh.rustup.rs](https://sh.rustup.rs) | sh
-```
-
-## Linux Platforms
-Execute system dependency provisions based on your target system package manager before compilation:
-```bash
-# Package requirements for Fedora environments
-sudo dnf install gcc libxcb-devel libX11-devel
-
-# Package requirements for Ubuntu/Debian environments
-sudo apt install build-essential libxcb1-dev libxcb-render0-dev \
-                 libxcb-shape0-dev libxcb-xfixes0-dev
-
-# Local compilation and immediate binary execution
-cargo build --release
-./target/release/iam-business
-
-# Execution of distribution packaging sequence
-chmod +x build-linux.sh
-./build-linux.sh
-sudo dpkg -i dist/linux/iam-business_1.0.0_amd64.deb
-```
-
-## Windows Platforms
-Verify that both the Rust toolchain and Inno Setup 6 are provisioned on the host environment paths, then execute the automated build batch file:
-```bash
-build-windows.bat
-```
-The resulting distribution binary will be accessible at dist\windows\IAMBusiness-Setup.exe.
-
-To execute the software in release mode natively without running the installation deployment scripts:
-
-```bash
-cargo run --release
-```
+* **Contract Management:** Creation, tracking, and payment management for rental contracts.
+* **Vehicle Availability:** Real-time visual dashboard for checking the status and availability of the fleet.
+* **Fleet Management:** Tools to add, edit, and track the status of vehicles, including maintenance records.
+* **Financial Reporting:** Management of rental income (encaissements) and business expenses (decaissements).
+* **Maintenance Logs:** Tracking of repairs and technical service history for each vehicle.
+* **Car Sales:** Lifecycle management for vehicles, from acquisition to final sale, including profit calculations.
+* **Cross-Platform:** Built with Rust, ensuring compatibility on both Windows and Linux.
 
 ---
 
-## Operational Logic
+## Tech Stack
 
-### Contractual Serial Notation
-All generated rental agreements are parsed through an automated sequence tracking system conforming to standard institutional notation: `IAM-YYYY-NNNN` (e.g., `IAM-2026-0001`).
-
-### Production Dependencies
-
-| Crate | Target Version | Operational Purpose |
-|:---|:---|:---|
-| `eframe` | 0.29.1 | Immediate-mode desktop graphic user interface framework |
-| `csv` | 1.3 | High-throughput structural text parsing engine |
-| `serde` | 1.0 | Data serialization and deserialization layers |
-| `chrono` | 0.4 | Temporal logic processing and date arithmetic operations |
-
-### Binary Size Optimization
-By leveraging explicit release profiles (`opt-level = "z"`), compiler optimization passes achieve a compact, statically linked target binary size ranging between approximately **5 MB and 8 MB**, making it highly viable for low-spec physical infrastructure.
+* **Language:** Rust
+* **GUI Framework:** eframe / egui (Immediate Mode)
+* **Data Persistence:** serde / csv
+* **Date Handling:** chrono
 
 ---
 
-## License
+## Getting Started
 
-Copyright IAM Business. All rights reserved. Proprietary software. Unauthorized duplication or redistribution is strictly prohibited.
+### Prerequisites
+
+* [Rust](https://www.rust-lang.org/tools/install) installed on your machine.
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone [https://github.com/yourusername/iam-business.git](https://github.com/yourusername/iam-business.git)
