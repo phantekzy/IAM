@@ -11,7 +11,7 @@
   </tr>
 </table>
 
-IAM Business is a desktop application developed in Rust using the eframe/egui framework. It is designed to assist with the management of car rental operations. The application provides tools for handling contracts, vehicle inventory, financial reporting, maintenance logs, and vehicle sales tracking.
+IAM Business is a desktop application developed in Rust using the eframe/egui framework. It is designed to assist with the management of car rental operations. The application provides tools for handling contracts, vehicle inventory, financial reporting, maintenance logs, vehicle sales tracking, and cash register management.
 
 ---
 
@@ -20,7 +20,8 @@ IAM Business is a desktop application developed in Rust using the eframe/egui fr
 * **Contract Management:** Creation, tracking, and payment management for rental contracts.
 * **Vehicle Availability:** Real-time visual dashboard for checking the status and availability of the fleet.
 * **Fleet Management:** Tools to add, edit, and track the status of vehicles, including maintenance records.
-* **Financial Reporting:** Management of rental income (encaissements) and business expenses (decaissements).
+* **Cash Register:** Dedicated module to track daily cash flow, including inflows (encaissements) and outflows (decaissements).
+* **Financial Reporting:** High-level reporting on business performance and profitability.
 * **Maintenance Logs:** Tracking of repairs and technical service history for each vehicle.
 * **Car Sales:** Lifecycle management for vehicles, from acquisition to final sale, including profit calculations.
 * **Cross-Platform:** Built with Rust, ensuring compatibility on both Windows and Linux.
